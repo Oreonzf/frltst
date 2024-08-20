@@ -1,7 +1,8 @@
-package org.example.studentapi.service;
+package org.example.studentapi;
 
 import org.example.studentapi.model.Student;
 import org.example.studentapi.repository.StudentRepository;
+import org.example.studentapi.service.StudentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

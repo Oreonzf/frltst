@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/students")
@@ -27,32 +26,31 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudentById(@PathVariable(value = "id") Long id) {
-        Optional<Student> student = studentService.getStudentById(id);
-        return student.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
+        Student student = studentService.getStudentById(id);
+        return ResponseEntity.ok(student); // Agora o serviço retorna um Student diretamente
     }
-    @PatchMapping("/{id}")
-    public ResponseEntity<Student> patchStudent(@PathVariable(value = "id") Long id,
-                                                @RequestBody Map<String, Object> updates) {
-        Student patchedStudent = studentService.patchStudent(id, updates);
-        return ResponseEntity.ok(patchedStudent);
-    }
-
 
     @PostMapping("/register")
-    public Student createStudent(@RequestBody Student student) {
-        return studentService.createStudent(student);
+    public ResponseEntity<Student> createStudent(@RequestBody Student student) {
+        Student createdStudent = studentService.createStudent(student);
+        return ResponseEntity.ok(createdStudent);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Student> updateStudent(@PathVariable(value = "id") Long id,
-                                                 @RequestBody Student studentDetails) {
+    public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody Student studentDetails) {
         Student updatedStudent = studentService.updateStudent(id, studentDetails);
         return ResponseEntity.ok(updatedStudent);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStudent(@PathVariable(value = "id") Long id) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<Student> patchStudent(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
+        Student patchedStudent = studentService.patchStudent(id, updates);
+        return ResponseEntity.ok(patchedStudent);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
         studentService.deleteStudent(id);
         return ResponseEntity.noContent().build();
     }

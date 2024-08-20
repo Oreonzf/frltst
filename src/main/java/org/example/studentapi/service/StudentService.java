@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class StudentService {
@@ -16,6 +15,7 @@ public class StudentService {
     private static final String STUDENT_NOT_FOUND = "Student not found for this id: ";
     private static final String MATRICULA_EXISTS = "Matricula already exists: ";
     private static final String INVALID_FIELD = "Invalid field: ";
+
     private static final String NOME = "nome";
     private static final String SOBRENOME = "sobrenome";
     private static final String MATRICULA = "matricula";
@@ -28,12 +28,14 @@ public class StudentService {
         this.studentRepository = studentRepository;
     }
 
+
     public List<Student> getAllStudents() {
         return studentRepository.findAll();
     }
 
-    public Optional<Student> getStudentById(Long id) {
-        return studentRepository.findById(id);
+    public Student getStudentById(Long id) {
+        return studentRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException(STUDENT_NOT_FOUND + id));
     }
 
     public Student createStudent(Student student) {
@@ -59,32 +61,28 @@ public class StudentService {
                 .orElseThrow(() -> new NoSuchElementException(STUDENT_NOT_FOUND + id));
 
         updates.forEach((key, value) -> {
+            if (key.equals("id")) {
+                throw new IllegalArgumentException("ID cannot be updated");
+            }
+
             switch (key) {
-                case NOME:
-                    student.setNome((String) value);
-                    break;
-                case SOBRENOME:
-                    student.setSobrenome((String) value);
-                    break;
-                case MATRICULA:
-                    student.setMatricula((String) value);
-                    break;
-                case TELEFONES:
-                    student.setTelefones((List<String>) value);
-                    break;
-                default:
-                    throw new IllegalArgumentException(INVALID_FIELD + key);
+                case NOME -> student.setNome((String) value);
+                case SOBRENOME -> student.setSobrenome((String) value);
+                case MATRICULA -> student.setMatricula((String) value);
+                case TELEFONES -> student.setTelefones((List<String>) value);
+                default -> throw new IllegalArgumentException(INVALID_FIELD + key);
             }
         });
 
         return studentRepository.save(student);
     }
 
-    public void deleteStudent(Long id) {
-        Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException(STUDENT_NOT_FOUND + id));
 
-        studentRepository.delete(student);
+    public void deleteStudent(Long id) {
+        if (!studentRepository.existsById(id)) {
+            throw new NoSuchElementException(STUDENT_NOT_FOUND + id);
+        }
+        studentRepository.deleteById(id);
     }
 
     private void validateStudent(Student student) {
@@ -92,4 +90,6 @@ public class StudentService {
             throw new IllegalArgumentException(MATRICULA_EXISTS + student.getMatricula());
         }
     }
+
 }
+

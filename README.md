@@ -19,8 +19,8 @@ A API permite:
 - **Atualizar estudantes:** Modificar informações de um estudante específico, seja de forma completa ou parcial.
 - **Deletar estudantes:** Remover um estudante do cadastro.
 
-### O deploy projeto está localizado no Servidor AWS IP: http://18.227.81.223:8080/students
-### A documentação API do projeto se encontra em http://18.227.81.223:8080/swagger-ui/index.html
+### O deploy projeto está localizado no (Servidor AWS) [http://18.227.81.223:8080/students]
+### A documentação API do projeto se encontra no (Swagger-ui) [http://18.227.81.223:8080/swagger-ui/index.html]
 
 ## Tecnologias Utilizadas
 

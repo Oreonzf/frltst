@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,22 +29,29 @@ class StudentServiceTest {
 
     @Test
     void testGetStudentById() {
-        // Dado que um estudante existe no repositório
+        // If estudante exists
         Student student = new Student();
         student.setId(1L);
         when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
 
-        // Quando o serviço é chamado para obter o estudante pelo ID
-        Optional<Student> foundStudent = studentService.getStudentById(1L);
+        // Quando chamado para obter id
+        Student foundStudent = studentService.getStudentById(1L);
 
-        // Então o estudante deve ser encontrado
-        assertTrue(foundStudent.isPresent());
-        assertEquals(1L, foundStudent.get().getId());
+        // Encontrar estudante
+        assertNotNull(foundStudent);
+        assertEquals(1L, foundStudent.getId());
+    }
+
+    @Test
+    void testGetStudentByIdNotFound() {
+        when(studentRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, () -> studentService.getStudentById(1L));
     }
 
     @Test
     void testCreateStudent() {
-        // Dado que um estudante novo é criado
+        // Estudante criado
         Student student = new Student();
         student.setNome("João");
         student.setSobrenome("Silva");
@@ -51,14 +59,76 @@ class StudentServiceTest {
 
         when(studentRepository.save(any(Student.class))).thenReturn(student);
 
-        // Quando o serviço é chamado para salvar o estudante
+        // Chamado para salvar
         Student createdStudent = studentService.createStudent(student);
 
-        // Então o estudante deve ser salvo corretamente
+        // Se salvo corretamente
         assertNotNull(createdStudent);
         assertEquals("João", createdStudent.getNome());
         verify(studentRepository, times(1)).save(student);
     }
 
-    // Outros testes para updateStudent e deleteStudent podem ser adicionados aqui
+    @Test
+    void testUpdateStudent() {
+        // Estudante existente
+        Student existingStudent = new Student();
+        existingStudent.setId(1L);
+        existingStudent.setNome("João");
+        existingStudent.setSobrenome("Silva");
+        existingStudent.setMatricula("123456");
+
+        // Novos detalhes do estudante
+        Student updatedDetails = new Student();
+        updatedDetails.setNome("João Att");
+        updatedDetails.setSobrenome("Silva Att");
+        updatedDetails.setMatricula("654321");
+
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(existingStudent));
+        when(studentRepository.save(any(Student.class))).thenReturn(existingStudent);
+
+        // Chamado para atualizar
+        Student updatedStudent = studentService.updateStudent(1L, updatedDetails);
+
+        // Verifica se foi atualizado corretamente
+        assertNotNull(updatedStudent);
+        assertEquals("João Atualizado", updatedStudent.getNome());
+        assertEquals("Silva Atualizado", updatedStudent.getSobrenome());
+        assertEquals("654321", updatedStudent.getMatricula());
+        verify(studentRepository, times(1)).save(existingStudent);
+    }
+
+    @Test
+    void testUpdateStudentNotFound() {
+        // Estudante não existe
+        when(studentRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Student updatedDetails = new Student();
+        updatedDetails.setNome("João Atualizado");
+
+        // Verifica se lança NoSuchElementException
+        assertThrows(NoSuchElementException.class, () -> studentService.updateStudent(1L, updatedDetails));
+    }
+
+    @Test
+    void testDeleteStudent() {
+        // Estudante existente
+        Student student = new Student();
+        student.setId(1L);
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
+
+        // Chamado para deletar
+        studentService.deleteStudent(1L);
+
+        // Verificar se deletado corretamente
+        verify(studentRepository, times(1)).delete(student);
+    }
+
+    @Test
+    void testDeleteStudentNotFound() {
+        // Estudante não existe
+        when(studentRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // Verifica se lança NoSuchElementException
+        assertThrows(NoSuchElementException.class, () -> studentService.deleteStudent(1L));
+    }
 }

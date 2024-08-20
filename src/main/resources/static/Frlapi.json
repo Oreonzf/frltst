@@ -7,12 +7,11 @@
   },
   "servers": [
     {
-      "url": "http://18.227.81.223:8080/students",
+      "url": "http://18.227.81.223:8080",
       "description": "Servidor AWS"
     }
   ],
   "paths": {
-    "paths": "",
     "/students/register": {
       "post": {
         "summary": "Cria um novo estudante",
@@ -22,70 +21,18 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "integer"
-                  },
-                  "nome": {
-                    "type": "string"
-                  },
-                  "sobrenome": {
-                    "type": "string"
-                  },
-                  "matricula": {
-                    "type": "string"
-                  },
-                  "telefones": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "required": [
-                  "nome",
-                  "sobrenome",
-                  "matricula",
-                  ""
-                ]
+                "$ref": "#/components/schemas/Student"
               }
             }
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "Estudante criado com sucesso",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer"
-                    },
-                    "nome": {
-                      "type": "string"
-                    },
-                    "sobrenome": {
-                      "type": "string"
-                    },
-                    "matricula": {
-                      "type": "string"
-                    },
-                    "telefones": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "required": [
-                    "nome",
-                    "sobrenome",
-                    "matricula",
-                    ""
-                  ]
+                  "$ref": "#/components/schemas/Student"
                 }
               }
             }
@@ -96,7 +43,7 @@
     "/students": {
       "get": {
         "summary": "Retorna uma lista com todos os estudantes",
-        "operationId": "getStudents",
+        "operationId": "getAllStudents",
         "responses": {
           "200": {
             "description": "Uma lista de estudantes",
@@ -105,33 +52,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "integer"
-                      },
-                      "nome": {
-                        "type": "string"
-                      },
-                      "sobrenome": {
-                        "type": "string"
-                      },
-                      "matricula": {
-                        "type": "string"
-                      },
-                      "telefones": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      }
-                    },
-                    "required": [
-                      "nome",
-                      "sobrenome",
-                      "matricula",
-                      ""
-                    ]
+                    "$ref": "#/components/schemas/Student"
                   }
                 }
               }
@@ -160,33 +81,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer"
-                    },
-                    "nome": {
-                      "type": "string"
-                    },
-                    "sobrenome": {
-                      "type": "string"
-                    },
-                    "matricula": {
-                      "type": "string"
-                    },
-                    "telefones": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "required": [
-                    "nome",
-                    "sobrenome",
-                    "matricula",
-                    ""
-                  ]
+                  "$ref": "#/components/schemas/Student"
                 }
               }
             }
@@ -214,40 +109,21 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "integer"
-                  },
-                  "nome": {
-                    "type": "string"
-                  },
-                  "sobrenome": {
-                    "type": "string"
-                  },
-                  "matricula": {
-                    "type": "string"
-                  },
-                  "telefones": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "required": [
-                  "nome",
-                  "sobrenome",
-                  "matricula",
-                  ""
-                ]
+                "$ref": "#/components/schemas/Student"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Estudante atualizado com sucesso"
+            "description": "Estudante atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student"
+                }
+              }
+            }
           }
         }
       },
@@ -271,9 +147,6 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "id": {
-                    "type": "integer"
-                  },
                   "nome": {
                     "type": "string"
                   },
@@ -290,22 +163,26 @@
                     }
                   }
                 },
-                "required": [
-                  "nome",
-                  "sobrenome",
-                  "matricula",
-                  ""
-                ]
+                "additionalProperties": true
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Estudante atualizado parcialmente"
+            "description": "Estudante atualizado parcialmente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student"
+                }
+              }
+            }
           }
         }
-      },
+      }
+    },
+    "/students/delete/{id}": {
       "delete": {
         "summary": "Deleta um estudante",
         "operationId": "deleteStudent",
@@ -354,8 +231,7 @@
         "required": [
           "nome",
           "sobrenome",
-          "matricula",
-          ""
+          "matricula"
         ]
       }
     }

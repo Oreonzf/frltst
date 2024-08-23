@@ -1,8 +1,7 @@
-package org.example.studentapi;
+package org.example.studentapi.service;
 
 import org.example.studentapi.model.Student;
 import org.example.studentapi.repository.StudentRepository;
-import org.example.studentapi.service.StudentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -80,8 +79,8 @@ class StudentServiceTest {
 
         // Novos detalhes do estudante
         Student updatedDetails = new Student();
-        updatedDetails.setNome("João Att");
-        updatedDetails.setSobrenome("Silva Att");
+        updatedDetails.setNome("João Atualizado");
+        updatedDetails.setSobrenome("Silva Atualizado");
         updatedDetails.setMatricula("654321");
 
         when(studentRepository.findById(1L)).thenReturn(Optional.of(existingStudent));

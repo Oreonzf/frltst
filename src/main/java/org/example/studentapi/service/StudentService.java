@@ -37,7 +37,6 @@ public class StudentService {
         return studentRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException(STUDENT_NOT_FOUND + id));
     }
-
     public Student createStudent(Student student) {
         validateStudent(student);
         return studentRepository.save(student);

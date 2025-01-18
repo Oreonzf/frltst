@@ -32,6 +32,7 @@ A API permite:
 - **Swagger:** Ferramenta para documentação e teste da API.
 - **JUnit 5:** Framework de testes utilizado para garantir a qualidade do código.
 - **Mockito:** Framework para criação de testes unitários utilizando mocks.
+- **Docker** Para automatizar o processo de criação de banco de dados. 
 
 ## Estrutura do Projeto
 
@@ -44,18 +45,34 @@ O projeto está estruturado seguindo as boas práticas de desenvolvimento em cam
 - **DTOs (Data Transfer Objects):** Utilizados para transferir dados entre as camadas da aplicação.
 - **Tests:** Inclui testes unitários para garantir o correto funcionamento das funcionalidades.
 - **Resources**: Contém o arquivo Swagger.
+- **Docker-compose.yml** Contém as informações de build do Docker.
+- **Dockerfile** Contém a configuração do Docker.
 
 ## Requisitos
 
 - **Java 17** ou superior
 - **Maven 3.6.1** ou superior
 - **MySQL** (ou outro banco de dados relacional)
+- **Docker**
 
 # Funcionalidades
 
 ## Configuração
 
-### Todas as configurações podem ser alteradas pelo **application.properties**
+### Configuração e Execução com Docker
+
+Para facilitar o setup e a execução do projeto em diferentes ambientes, você pode utilizar o Docker. Seguem os passos para construir e executar a aplicação usando Docker:
+
+#### Construção do Container
+
+Para construir a imagem Docker da sua aplicação, execute o seguinte comando no diretório raiz do projeto:
+
+```
+bash
+docker build -t studentapi .
+```
+
+### Todas as configurações podem ser alteradas pelo **application.yml**
 
 ## Endpoints
 ### Criar Estudante

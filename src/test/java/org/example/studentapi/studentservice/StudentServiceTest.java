@@ -1,7 +1,8 @@
-package org.example.studentapi.service;
+package org.example.studentapi.studentservice;
 
 import org.example.studentapi.model.Student;
 import org.example.studentapi.repository.StudentRepository;
+import org.example.studentapi.service.StudentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -11,8 +12,14 @@ import org.mockito.MockitoAnnotations;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 
 class StudentServiceTest {
 
@@ -24,20 +31,18 @@ class StudentServiceTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        MockitoAnnotations.initMocks(this);
     }
+
 
     @Test
     void testGetStudentById() {
-        // If estudante exists
         Student student = new Student();
         student.setId(1L);
         when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
 
-        // Quando chamado para obter id
         Student foundStudent = studentService.getStudentById(1L);
 
-        // Encontrar estudante
         assertNotNull(foundStudent);
         assertEquals(1L, foundStudent.getId());
     }
@@ -51,7 +56,6 @@ class StudentServiceTest {
 
     @Test
     void testCreateStudent() {
-        // Estudante criado
         Student student = new Student();
         student.setNome("João");
         student.setSobrenome("Silva");
@@ -59,10 +63,8 @@ class StudentServiceTest {
 
         when(studentRepository.save(any(Student.class))).thenReturn(student);
 
-        // Chamado para salvar
         Student createdStudent = studentService.createStudent(student);
 
-        // Se salvo corretamente
         assertNotNull(createdStudent);
         assertEquals("João", createdStudent.getNome());
         verify(studentRepository, times(1)).save(student);
@@ -70,14 +72,12 @@ class StudentServiceTest {
 
     @Test
     void testUpdateStudent() {
-        // Estudante existente
         Student existingStudent = new Student();
         existingStudent.setId(1L);
         existingStudent.setNome("João");
         existingStudent.setSobrenome("Silva");
         existingStudent.setMatricula("123456");
 
-        // Novos detalhes do estudante
         Student updatedDetails = new Student();
         updatedDetails.setNome("João Atualizado");
         updatedDetails.setSobrenome("Silva Atualizado");
@@ -86,10 +86,8 @@ class StudentServiceTest {
         when(studentRepository.findById(1L)).thenReturn(Optional.of(existingStudent));
         when(studentRepository.save(any(Student.class))).thenReturn(existingStudent);
 
-        // Chamado para atualizar
         Student updatedStudent = studentService.updateStudent(1L, updatedDetails);
 
-        // Verifica se foi atualizado corretamente
         assertNotNull(updatedStudent);
         assertEquals("João Atualizado", updatedStudent.getNome());
         assertEquals("Silva Atualizado", updatedStudent.getSobrenome());
@@ -99,36 +97,31 @@ class StudentServiceTest {
 
     @Test
     void testUpdateStudentNotFound() {
-        // Estudante não existe
         when(studentRepository.findById(1L)).thenReturn(Optional.empty());
 
         Student updatedDetails = new Student();
         updatedDetails.setNome("João Atualizado");
 
-        // Verifica se lança NoSuchElementException
         assertThrows(NoSuchElementException.class, () -> studentService.updateStudent(1L, updatedDetails));
     }
 
     @Test
     void testDeleteStudent() {
-        // Estudante existente
         Student student = new Student();
         student.setId(1L);
         when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
+        when(studentRepository.existsById(1L)).thenReturn(true);  // Garantir que existsById também retorne true
 
-        // Chamado para deletar
         studentService.deleteStudent(1L);
 
-        // Verificar se deletado corretamente
-        verify(studentRepository, times(1)).delete(student);
+        verify(studentRepository).deleteById(1L);
     }
+
 
     @Test
     void testDeleteStudentNotFound() {
-        // Estudante não existe
         when(studentRepository.findById(1L)).thenReturn(Optional.empty());
 
-        // Verifica se lança NoSuchElementException
         assertThrows(NoSuchElementException.class, () -> studentService.deleteStudent(1L));
     }
 }

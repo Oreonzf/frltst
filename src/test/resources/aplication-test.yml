@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop  # Cria as tabelas no início e as remove ao final dos testes
+    show-sql: true
+  h2:
+    console:
+      enabled: true  # Habilita o console do H2 para facilitar a depuração durante os testes
+
+# Configurações do Flyway específicas para teste
+flyway:
+  enabled: false  # Desabilita o Flyway para testes, caso use um schema criado pelo Hibernate
+
+# Configuração de log para reduzir a verbosidade durante os testes
+logging:
+  level:
+    root: WARN
+    org.springframework.web: ERROR
+    org.hibernate: ERROR
+
+# Configurações específicas do Spring Boot Test
+server:
+  port: 0  # Porta aleatória para evitar conflitos durante os testes paralelos
+
+# Configurações adicionais podem ser adicionadas conforme a necessidade

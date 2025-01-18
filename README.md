@@ -1,4 +1,3 @@
-![Logo do Projeto](https://camo.githubusercontent.com/0cedb1df1861b796963b6b050f47ec81a0fbfe8f06ef4892692a05cc77c4ac7a/68747470733a2f2f736974652e666f726c6576656e2e636f6d2f696d672f6c6f676f7469706f5f677265656e2e706e67)
 
 # API de Cadastro de Estudantes
 
